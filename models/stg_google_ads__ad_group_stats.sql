@@ -36,7 +36,7 @@ final as (
     select
         source_relation,
         customer_id as account_id, 
-        DATE(date,"America/Chicago") as date_day, 
+        date as date_day, 
         cast(id as {{ dbt.type_string() }}) as ad_group_id, 
         campaign_id, 
         device,

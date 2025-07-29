@@ -36,7 +36,7 @@ final as (
         source_relation, 
         _fivetran_id as keyword_id,
         customer_id as account_id, 
-        DATE(date,"America/Chicago") as date_day, 
+        date as date_day, 
         cast(ad_group_id as {{ dbt.type_string() }}) as ad_group_id,
         ad_group_criterion_criterion_id as criterion_id,
         campaign_id, 
