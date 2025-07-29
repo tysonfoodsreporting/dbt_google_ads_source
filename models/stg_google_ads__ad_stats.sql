@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__google_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__google_ads_enabled', True),
+     unique_key = ['source_relation','ad_id','ad_network_type','device','ad_group_id','keyword_ad_group_criterion','date_day'],
+     partition_by={
+      "field": "date_day", 
+      "data_type": "date",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -31,7 +38,7 @@ final as (
     select
         source_relation, 
         customer_id as account_id, 
-        date as date_day, 
+        DATE(date,"America/Chicago") as date_day, 
         {% if target.type in ('spark','databricks') %}
         coalesce(cast(ad_group_id as {{ dbt.type_string() }}), split(ad_group,'adGroups/')[1]) as ad_group_id,
         {% else %}
@@ -55,3 +62,4 @@ final as (
 )
 
 select * from final
+where DATE(date_day) >= DATE_ADD(CURRENT_DATE(), INTERVAL -2 YEAR)

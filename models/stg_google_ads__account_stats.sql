@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__google_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__google_ads_enabled', True),
+     unique_key = ['source_relation','account_id','device','ad_network_type','date_day'],
+     partition_by={
+      "field": "date_day", 
+      "data_type": "date",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -29,7 +36,7 @@ final as (
     select
         source_relation, 
         customer_id as account_id, 
-        date as date_day,
+        DATE(date,"America/Chicago") as date_day,
         ad_network_type,
         device,
         coalesce(clicks, 0) as clicks, 

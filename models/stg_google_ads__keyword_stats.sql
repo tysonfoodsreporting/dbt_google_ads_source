@@ -1,5 +1,11 @@
-{{ config(enabled=var('ad_reporting__google_ads_enabled', True)) }}
-
+{{ config(enabled=var('ad_reporting__google_ads_enabled', True),
+     unique_key = ['source_relation','keyword_id','date_day'],
+     partition_by={
+      "field": "date_day", 
+      "data_type": "date",
+      "granularity": "day"
+    }
+    ) }}
 with base as (
 
     select * 
@@ -30,7 +36,7 @@ final as (
         source_relation, 
         _fivetran_id as keyword_id,
         customer_id as account_id, 
-        date as date_day, 
+        DATE(date,"America/Chicago") as date_day, 
         cast(ad_group_id as {{ dbt.type_string() }}) as ad_group_id,
         ad_group_criterion_criterion_id as criterion_id,
         campaign_id, 
@@ -48,3 +54,4 @@ final as (
 
 select *
 from final
+where DATE(date_day) >= DATE_ADD(CURRENT_DATE(), INTERVAL -2 YEAR)
