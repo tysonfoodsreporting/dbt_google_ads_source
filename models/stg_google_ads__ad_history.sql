@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__google_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__google_ads_enabled', True),
+     unique_key = ['source_relation','ad_id','ad_group_id','updated_at'],
+     partition_by={
+      "field": "updated_at", 
+      "data_type": "TIMESTAMP",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -32,7 +39,7 @@ final as (
         cast(ad_group_id as {{ dbt.type_string() }}) as ad_group_id, 
         id as ad_id,
         name as ad_name,
-        updated_at,
+        CAST(FORMAT_TIMESTAMP("%F %T", updated_at, "America/Chicago") AS TIMESTAMP) as updated_at,        --Central timezone conversion
         type as ad_type,
         status as ad_status,
         display_url,
