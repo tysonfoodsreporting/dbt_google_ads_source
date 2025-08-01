@@ -22,7 +22,7 @@ vars:
   google_ads__search_term_keyword_stats_passthrough_metrics: []
 models:
   google_ads_source:
-    +schema: googleads_stg_prod
+    +schema: google_ads_stg_prod
     +materialized: table
     tmp:
       +materialized: view
