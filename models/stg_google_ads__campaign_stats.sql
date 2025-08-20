@@ -54,4 +54,4 @@ final as (
 
 select *
 from final
-where DATE(date_day) >= DATE_ADD(CURRENT_DATE(), INTERVAL -2 YEAR)
+where DATE(date_day) >= DATE_ADD(CURRENT_DATE(), INTERVAL -2 YEAR) and lower(ad_network_type) not like '%youtube%'
