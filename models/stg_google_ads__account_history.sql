@@ -1,4 +1,11 @@
-{{ config(enabled=var('ad_reporting__google_ads_enabled', True)) }}
+{{ config(enabled=var('ad_reporting__google_ads_enabled', True),
+    unique_key = ['source_relation','account_id','updated_at'],
+    partition_by={
+      "field": "updated_at", 
+      "data_type": "TIMESTAMP",
+      "granularity": "day"
+    }
+    ) }}
 
 with base as (
 
@@ -31,7 +38,7 @@ final as (
     select
         source_relation, 
         id as account_id,
-        updated_at,
+        CAST(FORMAT_TIMESTAMP("%F %T", updated_at, "America/Chicago") AS TIMESTAMP) as updated_at,        --Central timezone conversion
         currency_code,
         auto_tagging_enabled,
         time_zone,
