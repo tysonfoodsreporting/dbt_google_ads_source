@@ -54,4 +54,4 @@ final as (
     from fields
 )
 
-select * from final
+select * from final where lower(ad_network_type) not like '%youtube%'

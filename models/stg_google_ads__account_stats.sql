@@ -45,4 +45,4 @@ final as (
 )
 
 select *
-from final
+from final where lower(ad_network_type) not like '%youtube%'
