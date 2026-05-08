@@ -43,8 +43,14 @@ final as (
         customer_id as account_id,
         advertising_channel_type,
         advertising_channel_subtype,
-        start_date as start_date,
-        end_date as end_date,
+        COALESCE(
+        start_date,
+        SUBSTR(start_date_time, 1, 10)
+        ) AS start_date,
+        COALESCE(
+        end_date,
+        SUBSTR(end_date_time, 1, 10)
+        ) AS end_date,
         serving_status,
         status,
         tracking_url_template,
